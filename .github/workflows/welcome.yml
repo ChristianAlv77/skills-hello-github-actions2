@@ -5,12 +5,12 @@ on:
 permissions:
   pull-requests: write
 jobs:
-  build:
-    name: Post welcome comment
+  Mi-primer-job:
+    name: Mi primer job
     runs-on: ubuntu-latest
     steps:
-      - name: Imprimir 
-        env:
-          MI_VARIABLE: Hola mundo
-        run: |
-          echo $MI_VARIABLE.
+    - name: Imprimir 
+      env:
+        MI_VARIABLE: Hola mundo
+      run: |
+        echo $MI_VARIABLE.
