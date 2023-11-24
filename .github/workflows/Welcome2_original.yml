@@ -1,4 +1,4 @@
-name: Post welcome comment
+name: Welcome Original 2
 on:
   pull_request:
     types: [opened]
