@@ -1,0 +1,16 @@
+name: Post welcome comment
+on:
+  pull_request:
+    types: [opened]
+permissions:
+  pull-requests: write
+jobs:
+  Mi-primer-job:
+    name: Mi primer job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Imprimir 
+      env:
+        MI_VARIABLE: Hola mundo
+      run: |
+        echo $MI_VARIABLE.
