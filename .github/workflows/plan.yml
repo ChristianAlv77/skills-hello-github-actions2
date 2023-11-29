@@ -1,5 +1,9 @@
 name: Create terraform plan
-on: [pull_request]
+on:
+    workflow_dispatch:
+    push:
+      branches:
+        - main
 jobs:
   plan:
     name: Terraform Plan
