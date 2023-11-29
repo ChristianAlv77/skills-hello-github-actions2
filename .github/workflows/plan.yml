@@ -39,7 +39,7 @@ jobs:
         continue-on-error: true
 
       - uses: actions/github-script@v2
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'push'
         env:
             PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
