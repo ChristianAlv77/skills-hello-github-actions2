@@ -2,17 +2,17 @@ provider "aws" {
   region = "us-west-2"  # Puedes cambiar la región según tus necesidades
 }
 
-resource "aws_vpc" "example" {
+resource "aws_vpc" "example2" {
   cidr_block = "10.0.0.0/16"
   enable_dns_support = true
   enable_dns_hostnames = true
   tags = {
-    Name = "example-vpc"
+    Name = "example2-vpc"
   }
 }
 
 resource "aws_subnet" "public_subnet_a" {
-  vpc_id                  = aws_vpc.example.id
+  vpc_id                  = aws_vpc.example2.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-west-2a"
   map_public_ip_on_launch = true
@@ -22,7 +22,7 @@ resource "aws_subnet" "public_subnet_a" {
 }
 
 resource "aws_subnet" "public_subnet_b" {
-  vpc_id                  = aws_vpc.example.id
+  vpc_id                  = aws_vpc.example2.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "us-west-2b"
   map_public_ip_on_launch = true
@@ -31,16 +31,16 @@ resource "aws_subnet" "public_subnet_b" {
   }
 }
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id  = aws_vpc.example.id
+resource "aws_internet_gateway" "gw2" {
+  vpc_id  = aws_vpc.example2.id
 }
 
 resource "aws_route_table" "r" {
-  vpc_id  = aws_vpc.example.id
+  vpc_id  = aws_vpc.example2.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
+    gateway_id = aws_internet_gateway.gw2.id
   }
 
   tags = {
@@ -49,24 +49,24 @@ resource "aws_route_table" "r" {
 }
 
 resource "aws_main_route_table_association" "a" {
-  vpc_id  = aws_vpc.example.id
+  vpc_id  = aws_vpc.example2.id
   route_table_id = aws_route_table.r.id
 }
 
 resource "aws_ecs_cluster" "cluster" {
-  name = "example"
+  name = "example2"
 }
 
 resource "aws_ecs_task_definition" "task" {
-  family                   = "example"
+  family                   = "example2"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE","EC2"]
   cpu                      = "256"
   memory                   = "512"
 
   container_definitions = jsonencode([{
-    name  = "example"
-    image = "nginx:latest"
+    name  = "example2"
+    image = "nginx:latest2"
     portMappings = [{
       containerPort = 80
       hostPort      = 80
@@ -75,35 +75,35 @@ resource "aws_ecs_task_definition" "task" {
   }])
 }
 
-resource "aws_lb" "test" {
-  name               = "test-lb-tf"
+resource "aws_lb" "test2" {
+  name               = "test2-lb-tf"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb_sg.id]
   subnets            = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
 }
 
-resource "aws_lb_target_group" "test" {
-  name     = "tf-example"
+resource "aws_lb_target_group" "test2" {
+  name     = "tf-example2"
   port     = 80
   protocol = "HTTP"
-  vpc_id  = aws_vpc.example.id
+  vpc_id  = aws_vpc.example2.id
   target_type = "ip"
 }
 
 resource "aws_lb_listener" "front_end" {
-  load_balancer_arn = aws_lb.test.arn
+  load_balancer_arn = aws_lb.test2.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.test.arn
+    target_group_arn = aws_lb_target_group.test2.arn
   }
 }
 
 resource "aws_ecs_service" "service" {
-  name            = "example"
+  name            = "example2"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.task.arn
   desired_count   = 2
@@ -116,8 +116,8 @@ resource "aws_ecs_service" "service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.test.arn
-    container_name   = "example"
+    target_group_arn = aws_lb_target_group.test2.arn
+    container_name   = "example2"
     container_port   = 80
   }
 
@@ -126,7 +126,7 @@ resource "aws_ecs_service" "service" {
 resource "aws_security_group" "lb_sg" {
   name        = "lb_sg"
   description = "Allow all inbound traffic"
-  vpc_id = aws_vpc.example.id
+  vpc_id = aws_vpc.example2.id
   
   ingress {
     from_port   = 80
@@ -189,7 +189,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "My distribution 2"
+  comment             = "My distribution 3"
   default_root_object = "index.html"
 
   default_cache_behavior {
