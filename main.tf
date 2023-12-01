@@ -189,7 +189,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "My distribution"
+  comment             = "My distribution 2"
   default_root_object = "index.html"
 
   default_cache_behavior {
