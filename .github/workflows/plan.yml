@@ -1,4 +1,4 @@
-name: Create terraform plan
+name: Ejercicio Terraform Final
 on:
     workflow_dispatch:
     push:
@@ -6,7 +6,7 @@ on:
         - main
 jobs:
   plan:
-    name: Terraform Plan
+    name: Ejercicio Terraform Final
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
