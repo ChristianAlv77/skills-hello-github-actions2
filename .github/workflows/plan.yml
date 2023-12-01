@@ -42,7 +42,7 @@ jobs:
         id: apply
         run: terraform apply -auto-approve
 
-      - uses: actions/github-script@v2
+      - uses: actions/github-script@v7
         if: github.event_name == 'push'
         env:
             PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
